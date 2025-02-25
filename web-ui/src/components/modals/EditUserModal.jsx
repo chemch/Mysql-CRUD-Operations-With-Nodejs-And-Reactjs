@@ -5,6 +5,18 @@ import axios from "axios";
 
 //starting of the functional component which edits the user in the database
 function EditUserModal() {
+  
+  // validate environment variables are set
+  if (!import.meta.env.VITE_API_PORT || !import.meta.env.VITE_API_HOST) {
+    throw new Error("API_PORT or API_HOST is not set");
+  }
+
+  // set the API_HOST and API_PORT from the environment variables
+  const api_port = import.meta.env.VITE_API_PORT;
+  // console.log(`API_PORT: ${api_port}`);
+  const api_host = import.meta.env.VITE_API_HOST;
+  // console.log(`API_HOST ${api_host}`);
+
   //using state variables for access of the input fields
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -33,8 +45,11 @@ function EditUserModal() {
       return;
     }
     try {
+      const timestamp = new Date().toLocaleString();
+      console.log(`Editing User: ID=${id}, Name=${name}, Email=${email} at ${timestamp}`);
+
       //put req to server
-      const res = await axios.put(`http://localhost:3000`, {
+      const res = await axios.put(`http://${api_host}:${api_port}`, {
         id,
         name,
         email

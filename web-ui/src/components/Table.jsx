@@ -8,6 +8,18 @@ import DeleteUserModal from "./modals/DeleteUserModal";
 
 //creation of the parent functional component which will be pased to app.jsx
 function Table() {
+
+  // validate environment variables are set
+  if (!import.meta.env.VITE_API_PORT || !import.meta.env.VITE_API_HOST) {
+    throw new Error("API_PORT or API_HOST is not set");
+  }
+
+  // set the API_HOST and API_PORT from the environment variables
+  const api_port = import.meta.env.VITE_API_PORT;
+  // console.log(`API_PORT: ${api_port}`);
+  const api_host = import.meta.env.VITE_API_HOST;
+  // console.log(`API_HOST ${api_host}`);
+
   //using use state, use ref for state variables and ref to track if fetch has already been attempted
   const [users, setUsers] = useState([]);
   const hasFetchedUsers = useRef(false);
@@ -16,7 +28,9 @@ function Table() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:3000");
+        console.log(`Fetching Users from Server at ${new Date().toLocaleString()}`);
+        //get request to the server
+        const response = await axios.get(`http://${api_host}:${api_port}`);
         //setting the empty array as a json object of users got from the server
         setUsers(response.data);
 

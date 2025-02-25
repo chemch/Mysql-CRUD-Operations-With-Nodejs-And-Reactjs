@@ -30,7 +30,7 @@ https://github.com/mushfiqurniazzz/Mysql-CRUD-Operations-With-Nodejs-And-Reactjs
 
    npm start
 
-6. <b>Access the App</b>: Open your web browser and navigate to `http://localhost:3000` for frontend `http://localhost:5000` to access the app. You can now use the app locally on your machine, connected to your MySQL database using the variables specified in the `.env` file.
+6. <b>Access the App</b>: Open your web browser and navigate to `http://<>:3000` for frontend `http://<>:<PORT>` to access the app. You can now use the app locally on your machine, connected to your MySQL database using the variables specified in the `.env` file.
 
 7. <b>Note</b>: The project may not work if you do not install dependencies in both front end and backend. So you would have to apply step 2 and 3 twice, once in frontend and once in backend.
 </p>

@@ -2,10 +2,21 @@
 const express = require("express")
 const router = express.Router()
 
+// this is a test endpoint to validate that the server is running 
+router.get('/test', (req, res) => {
+    try {
+        res.send('Server is running...');
+    } catch (error) {
+        // basic error handling
+        console.error('Error:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
 //this get function sends all the results to the client stored in the database as a json object
 router.get('/', async (req, res) => {
     try {
-        const [results] = await req.pool.query(`SELECT * FROM ${process.env.DB_TABLENAME}`);
+        const [results] = await req.pool.query(`SELECT * FROM ${process.env.DB_TABLE_NAME}`);
         res.json(results);
     } catch (error) {
         //basic error handling
@@ -25,13 +36,13 @@ router.post("/", async (req, res) => {
 
     try {
         // check if the user already exists
-        const [checkResults] = await req.pool.query(`SELECT COUNT(*) AS count FROM ${process.env.DB_TABLENAME} WHERE email = ?`, [email]);
+        const [checkResults] = await req.pool.query(`SELECT COUNT(*) AS count FROM ${process.env.DB_TABLE_NAME} WHERE email = ?`, [email]);
         if (checkResults[0].count > 0) {
             return res.status(409).send('User already exists');
         }
 
         // create the new user
-        const [insertResults] = await req.pool.query(`INSERT INTO ${process.env.DB_TABLENAME} (name, email) VALUES (?, ?)`, [name, email]);
+        const [insertResults] = await req.pool.query(`INSERT INTO ${process.env.DB_TABLE_NAME} (name, email) VALUES (?, ?)`, [name, email]);
 
         // send a success response
         res.status(201).json({ id: insertResults.insertId, name, email });
@@ -53,14 +64,14 @@ router.put("/", async (req, res) => {
 
     try {
         //check if the user exists
-        const [checkIfUserExists] = await req.pool.query(`SELECT COUNT(*) AS count FROM ${process.env.DB_TABLENAME} WHERE id = ?`, [id])
+        const [checkIfUserExists] = await req.pool.query(`SELECT COUNT(*) AS count FROM ${process.env.DB_TABLE_NAME} WHERE id = ?`, [id])
 
         if (checkIfUserExists[0].count === 0) {
             return res.status(404).send("User does not exist.")
         }
 
         //update the user
-        await req.pool.query(`UPDATE ${process.env.DB_TABLENAME} SET name = ?, email = ? where id = ?`, [name, email, id])
+        await req.pool.query(`UPDATE ${process.env.DB_TABLE_NAME} SET name = ?, email = ? where id = ?`, [name, email, id])
 
         //send a success response
         res.status(200).json({ id, name, email })
@@ -83,14 +94,14 @@ router.delete("/", async (req, res) => {
 
     try {
         //check if the user exists
-        const [checkIfUserExists] = await req.pool.query(`SELECT COUNT(*) AS count FROM ${process.env.DB_TABLENAME} WHERE id = ?`, [id])
+        const [checkIfUserExists] = await req.pool.query(`SELECT COUNT(*) AS count FROM ${process.env.DB_TABLE_NAME} WHERE id = ?`, [id])
 
         if (checkIfUserExists[0].count === 0) {
             return res.status(404).send("User does not exist.")
         }
 
         //delete the user
-        await req.pool.query(`DELETE FROM ${process.env.DB_TABLENAME} WHERE id = ?`, [id])
+        await req.pool.query(`DELETE FROM ${process.env.DB_TABLE_NAME} WHERE id = ?`, [id])
 
         //send a success response
         res.status(200).send(`id ${id} deleted successfuly`)

@@ -5,6 +5,18 @@ import { toast } from "sonner";
 
 //starting of the functional component which will delete users
 function DeleteUserModal() {
+  
+  // validate environment variables are set
+  if (!import.meta.env.VITE_API_PORT || !import.meta.env.VITE_API_HOST) {
+    throw new Error("API_PORT or API_HOST is not set");
+  }
+
+  // set the API_HOST and API_PORT from the environment variables
+  const api_port = import.meta.env.VITE_API_PORT;
+  // console.log(`API_PORT: ${api_port}`);
+  const api_host = import.meta.env.VITE_API_HOST;
+  // console.log(`API_HOST ${api_host}`);
+
   //using state variables for access of the input fields
   const [id, setId] = useState("");
 
@@ -21,10 +33,12 @@ function DeleteUserModal() {
       return;
     }
     try {
+      console.log(`Deleting User with ID: ${id}`);
+
       //delete req to the server with data payload
       const res = await axios.request({
         method: "delete",
-        url: "http://localhost:3000",
+        url: `http://${api_host}:${api_port}`,
         data: { id }
       });
 

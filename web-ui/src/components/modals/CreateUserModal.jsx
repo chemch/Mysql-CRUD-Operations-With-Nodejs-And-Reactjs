@@ -4,7 +4,20 @@ import { toast } from "sonner";
 import axios from "axios";
 
 //starting of the functional component which takes a argument inside for adding the user to the user aray for dynamic display witout any reload
+// eslint-disable-next-line react/prop-types
 function CreateUserModal({ addUser }) {
+
+  // validate environment variables are set
+  if (!import.meta.env.VITE_API_PORT || !import.meta.env.VITE_API_HOST) {
+    throw new Error("API_PORT or API_HOST is not set");
+  }
+
+  // set the API_HOST and API_PORT from the environment variables
+  const api_port = import.meta.env.VITE_API_PORT;
+  // console.log(`API_PORT: ${api_port}`);
+  const api_host = import.meta.env.VITE_API_HOST;
+  // console.log(`API_HOST ${api_host}`);
+
   //using state variables for access of the input fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,8 +41,12 @@ function CreateUserModal({ addUser }) {
     }
 
     try {
+      // console log the time of creation
+      const timestamp = new Date().toLocaleString();
+      console.log(`Creating User: Name=${name}, Email=${email} at ${timestamp}`);
+
       //post req to server
-      const res = await axios.post("http://localhost:3000/", {
+      const res = await axios.post(`http://${api_host}:${api_port}/`, {
         name,
         email
       });
